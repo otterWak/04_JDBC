@@ -82,7 +82,7 @@ public class UserDAO {
 		return user; // 결과 반환( 생성된 User 또는 null ) 
 	}
 
-	/** User 등록 DAO 메서드
+	/** 1. User 등록 DAO 메서드
 	 * @param conn : DB 연결 정보가 담겨있는 Connection 객체
 	 * @param user : 입력 받은 id, pw, name이 세팅된 User 객체
 	 * @return INSERT 결과 행의 개수
@@ -127,7 +127,7 @@ public class UserDAO {
 	}
 
 	
-	/** User 전체 조회 DAO 메서드
+	/** 2. User 전체 조회 DAO 메서드
 	 * @param conn
 	 * @return userList
 	 */
@@ -196,14 +196,18 @@ public class UserDAO {
 		List<User> userList = new ArrayList<User>();
 		
 		try {
-			String sql = "SELECT USER_NO , USER_ID , USER_PW , USER_NAME ,"
-					+ "ENROLL_DATE"
-					+ " FROM TB_USER "
-					+ "WHERE USER_NAME LIKE '%"+ input+ "%'";
+			String sql = """
+					SELECT USER_NO , USER_ID , USER_PW , USER_NAME ,
+					TO_CHAR(ENROLL_DATE, 'YYYY"년" MM"월" DD"일"') ENROLL_DATE
+					FROM TB_USER
+					WHERE USER_NAME LIKE '%' || ? || '%'
+					ORDER BY USER_NO ASC
+					""";
 			
-			stmt = conn.prepareStatement(sql);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, input);
 			
-			rs = stmt.executeQuery(sql);
+			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
 				int userNo = rs.getInt("USER_NO");
@@ -218,18 +222,28 @@ public class UserDAO {
 			}
 		
 		}finally {
-			
+			close(rs);
+			close(pstmt);
 		}
 		
 		return userList;
 	}
 
-	public List<User> selectUser(Connection conn, int input) throws Exception{
-		List<User> userList = new ArrayList<User>();
+	
+	/** 4. USER_NO를 입력 받아 일치하는 User 조회 DAO
+	 * @param conn
+	 * @param input
+	 * @return user 객체 or null
+	 * @throws Exception
+	 */
+	public User selectUser(Connection conn, int input) throws Exception{
+		// 1. 결과 저장용 변수 선언
+		User user = null;
 		
 		try {
 			String sql = """
-					SELECT USER_NO , USER_ID , USER_PW , USER_NAME , ENROLL_DATE
+					SELECT USER_NO , USER_ID , USER_PW , USER_NAME , 
+					TO_CHAR(ENROLL_DATE, 'YYYY"년" MM"월" DD"일"') ENROLL_DATE
 					FROM TB_USER
 					WHERE USER_NO = ?
 					""";
@@ -239,26 +253,33 @@ public class UserDAO {
 			
 			rs = pstmt.executeQuery();
 			
-			while(rs.next()) {
+			if(rs.next()) {
 				int userNo = rs.getInt("USER_NO");
 				String userId = rs.getString("USER_ID");
 				String userPw = rs.getString("USER_PW");
 				String userName = rs.getString("USER_NAME");
-				Date enrollDate = rs.getDate("ENROLL_DATE");
+				String enrollDate = rs.getString("ENROLL_DATE");
 	
-				User user = new User(userNo, userId, userPw, userName, enrollDate.toString());
-				
-				userList.add(user);
+				user = new User(userNo, userId, userPw, userName, enrollDate.toString());
+
 			}
 		
 		}finally {
-			
+			close(rs);
+			close(pstmt);
 		}
 		
-		return userList;
+		return user;
 	}
 
-	public int deleteUser(Connection conn, int userNo) throws Exception{
+	
+	/** 5. USER_NO를 입력 받아 일치하는 User 삭제 DAO
+	 * @param conn
+	 * @param input
+	 * @return
+	 * @throws Exception
+	 */
+	public int deleteUser(Connection conn, int input) throws Exception{
 		int result = 0;
 		
 		try {
@@ -268,7 +289,7 @@ public class UserDAO {
 
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setInt(1, userNo);
+			pstmt.setInt(1, input);
 
 			result = pstmt.executeUpdate();
 			
@@ -280,15 +301,66 @@ public class UserDAO {
 		return result;
 	}
 
-	public int updateName(Connection conn, String originName, String newName) throws Exception{
+	
+	/**  6-1. ID, PW가 일치하는 회원의 USER_NO 조회 DAO
+	 * @param conn
+	 * @param userId
+	 * @param userPw
+	 * @return userNo
+	 */
+	public int selectUser(Connection conn, String userId, String userPw) throws Exception{
+
+		int userNo = 0; // 결과 저장용 변수 선언
+		
+		try {
+			String sql = """
+					SELECT USER_NO
+					FROM TB_USER
+					WHERE USER_ID = ?
+					AND   USER_PW = ?
+					""";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			pstmt.setString(2, userPw);
+			
+			rs = pstmt.executeQuery();
+			
+			// 조회된 1행이 있을 경우
+			if(rs.next()) {
+				userNo = rs.getInt("USER_NO");
+			}
+			
+		}finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		return userNo; // 조회 성공 USER_NO, 실패 0 반환
+	}
+	
+	
+	/** 6-2. userNo가 일치하는 User의 이름 수정 DAO
+	 * @param conn
+	 * @param userName
+	 * @param userNo
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateName(Connection conn, String userName, int userNo) throws Exception{
 		int result = 0;
 		
 		try {
-			String sql = "UPDATE TB_USER SET USER_NAME = '"+newName + "' WHERE USER_NAME = '"+ originName+"'";
-			System.out.println(sql);
+			String sql = """
+					UPDATE TB_USER
+					SET USER_NAME = ?
+					WHERE USER_NO = ?
+					""";
 
 			pstmt = conn.prepareStatement(sql);
-
+			
+			pstmt.setString(1, userName);
+			pstmt.setInt(2, userNo);
+			
 			result = pstmt.executeUpdate();
 			
 		} finally {
@@ -296,5 +368,69 @@ public class UserDAO {
 		}
 		return result;
 	}
+
+	
+	/** 7-1. 아이디 중복 확인 DAO
+	 * @param conn
+	 * @param userId
+	 * @return count
+	 */
+	public int idCheck(Connection conn, String userId) throws Exception{
+		int count = 0;
+		
+		try {
+			String sql = """
+					SELECT COUNT(*) 
+					FROM TB_USER
+					WHERE USER_ID = ?
+					""";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, userId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				count = rs.getInt(1); // 조회된 컬럼 순서를 이용해
+									  // 컬럼값 얻어오기
+			}
+			
+		} finally {
+			close(rs);
+			close(pstmt);
+		}
+		
+		
+		
+		return count;
+	}
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
