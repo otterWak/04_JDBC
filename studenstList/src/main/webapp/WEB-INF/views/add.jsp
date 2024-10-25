@@ -11,11 +11,11 @@
 <body>
     <div class="container">
         <h2>학생 정보 입력</h2>
-        <form action="/student/add" method="post">
+        <form action="/student/add" method="post" id="addForm">
         <input type="hidden" name="stdNo">
             <div class="form-group">
                 <label for="name">이름</label>
-                <input type="text" id="name" name="stdName">
+                <input type="text" id="name" name="stdName" required>
             </div>
 
             <div class="form-group">
@@ -31,7 +31,7 @@
                         <label for="male">남자</label>
                     </div>
                     <div class="radio-item">
-                        <input type="radio" id="female" name="stdGen" value="F">
+                        <input type="radio" id="female" name="stdGen" value="F" required>
                         <label for="female">여자</label>
                     </div>
                 </div>
@@ -79,6 +79,6 @@
 		<c:remove var = "message" scope="session" />
 	</c:if>
 
-    
+    <script src="/resources/js/add.js"></script>
 </body>
 </html>

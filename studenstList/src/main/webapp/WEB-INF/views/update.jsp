@@ -15,7 +15,7 @@
         <input type="hidden" name="stdNo" value="${param.stdNo}">
             <div class="form-group">
                 <label for="name">이름</label>
-                <input type="text" id="name" name="stdName" value="${student.stdName}">
+                <input type="text" id="name" name="stdName" value="${student.stdName}" required>
             </div>
 
             <div class="form-group">
@@ -31,7 +31,7 @@
                         <label for="male">남자</label>
                     </div>
                     <div class="radio-item">
-                        <input type="radio" id="female" name="stdGen" value="F">
+                        <input type="radio" id="female" name="stdGen" value="F" required>
                         <label for="female">여자</label>
                     </div>
                 </div>
@@ -45,19 +45,19 @@
                         <label for="gradeA">A</label>
                     </div>
                     <div class="radio-item">
-                        <input type="radio" id="gradeB" name="stdScore" value="B">
+                        <input type="radio" id="gradeB" name="stdScore" value="B" required>
                         <label for="gradeB">B</label>
                     </div>
                     <div class="radio-item">
-                        <input type="radio" id="gradeC" name="stdScore" value="C">
+                        <input type="radio" id="gradeC" name="stdScore" value="C" required>
                         <label for="gradeC">C</label>
                     </div>
                     <div class="radio-item">
-                        <input type="radio" id="gradeD" name="stdScore" value="D">
+                        <input type="radio" id="gradeD" name="stdScore" value="D" required>
                         <label for="gradeD">D</label>
                     </div>
                     <div class="radio-item">
-                        <input type="radio" id="gradeF" name="stdScore" value="F">
+                        <input type="radio" id="gradeF" name="stdScore" value="F" required>
                         <label for="gradeF">F</label>
                     </div>
                 </div>
