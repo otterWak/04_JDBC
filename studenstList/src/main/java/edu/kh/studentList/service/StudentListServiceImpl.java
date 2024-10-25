@@ -32,6 +32,53 @@ public class StudentListServiceImpl implements StudentListService{
 		return student;
 	}
 
+
+	@Override
+	public int stdUpdate(String stdName, int stdAge, String stdGen, String stdScore, int stdNo) throws Exception {
+
+		Connection conn = getConnection();
+		int result = dao.stdUpdate(conn ,stdName, stdAge, stdGen, stdScore, stdNo);
+		
+		if(result>0) commit(conn);
+		else rollback(conn);
+		
+		close(conn);
+		return result;
+	}
+
+
+	@Override
+	public int stdDelete(int stdNo) throws Exception {
+
+		Connection conn = getConnection();
+		int result = dao.stdDelete(conn, stdNo);
+		
+		if(result>0) commit(conn);
+		else rollback(conn);
+		
+		close(conn);
+		return result;
+	}
+
+
+	@Override
+	public int stdAdd(String stdName, int stdAge, String stdGen, String stdScore) throws Exception {
+		Connection conn = getConnection();
+		int result = dao.stdAdd(conn, stdName, stdAge, stdGen, stdScore);
+		
+		if(result>0) commit(conn);
+		else rollback(conn);
+		
+		close(conn);
+		return result;
+	}
+
+
+
+
+
+
+
 	
 	
 	

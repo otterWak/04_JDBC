@@ -5,22 +5,22 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>${student.stdName} 학생 정보 수정</title>
+    <title>학생 추가</title>
     <link rel="stylesheet" href="/resources/css/update.css">
 </head>
 <body>
     <div class="container">
         <h2>학생 정보 입력</h2>
-        <form action="/student/update" method="post">
-        <input type="hidden" name="stdNo" value="${param.stdNo}">
+        <form action="/student/add" method="post">
+        <input type="hidden" name="stdNo">
             <div class="form-group">
                 <label for="name">이름</label>
-                <input type="text" id="name" name="stdName" value="${student.stdName}">
+                <input type="text" id="name" name="stdName">
             </div>
 
             <div class="form-group">
                 <label for="age">나이</label>
-                <input type="number" id="age" name="stdAge" values="${student.stdAge}" required>
+                <input type="number" id="age" name="stdAge" required>
             </div>
 
             <div class="form-group">
@@ -64,7 +64,7 @@
             </div>
 
             <div class="button-group">
-                <input type="submit" value="제출">
+                <input type="submit" value="추가">
             </div>
             
         </form>

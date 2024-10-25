@@ -92,12 +92,80 @@ public class StudentListDAOImpl implements StudentListDAO{
 						  .stdScore(rs.getString("STD_SCORE"))
 						  .build();
 			}
-		}catch (Exception e) {
-			e.printStackTrace();
+		}finally{
+			close(rs);
+			close(pstmt);
 		}
 		
 		
 		return student;
 	}
+
+	@Override
+	public int stdUpdate(Connection conn, String stdName, int stdAge, String stdGen, String stdScore, int stdNo)
+			throws Exception {
+		int result = 0;
+		
+		try {
+			String sql = prop.getProperty("stdUpdate");
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, stdName);
+			pstmt.setInt(2, stdAge);
+			pstmt.setString(3, stdGen);
+			pstmt.setString(4, stdScore);
+			pstmt.setInt(5, stdNo);
+			
+			result = pstmt.executeUpdate();
+			
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int stdDelete(Connection conn, int stdNo) throws Exception {
+		int result = 0;
+		
+		try {
+			String sql = prop.getProperty("stdDelete");
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, stdNo);
+			
+			result = pstmt.executeUpdate();
+			
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int stdAdd(Connection conn, String stdName, int stdAge, String stdGen, String stdScore) throws Exception {
+		int result = 0;
+		
+		try {
+			String sql = prop.getProperty("stdAdd");
+			
+			pstmt =conn.prepareStatement(sql);
+			pstmt.setString(1, stdName);
+			pstmt.setInt(2, stdAge);
+			pstmt.setString(3, stdGen);
+			pstmt.setString(4, stdScore);
+			
+			result = pstmt.executeUpdate();
+			
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	
 
 }

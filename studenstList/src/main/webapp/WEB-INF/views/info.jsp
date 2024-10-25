@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
@@ -11,7 +12,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>${student.stdNo}.${student.stdName}</h1>
+            <h1>${student.stdName}</h1>
         </div>
         
         <div class="student-info">
@@ -37,5 +38,15 @@
             <button class="btn btn-delete" id="deleteBtn">삭제</button>
         </div>
     </div>
+    
+    <c:if test="${not empty sessionScope.message}">
+	  	<script>
+	  		alert("${message}")
+	  	</script>
+	  	
+	  	<c:remove var = "message" scope="session"/>
+	</c:if>
+    
+    <script src="/resources/js/info.js"></script>
 </body>
 </html>

@@ -11,4 +11,11 @@ public interface StudentListDAO {
 	
 	Student studentInfoView(Connection conn, int stdNo) throws Exception;
 
+	int stdUpdate(Connection conn, String stdName, int stdAge, String stdGen, String stdScore, int stdNo) throws Exception;
+
+	int stdDelete(Connection conn, int stdNo) throws Exception;
+
+	int stdAdd(Connection conn, String stdName, int stdAge, String stdGen, String stdScore) throws Exception;
+
+
 }

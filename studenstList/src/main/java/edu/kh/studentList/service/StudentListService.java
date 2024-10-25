@@ -10,5 +10,14 @@ public interface StudentListService {
 
 	Student studentInfoView(int stdNo) throws Exception;
 
+	int stdUpdate(String stdName, int stdAge, String stdGen, String stdScore, int stdNo) throws Exception;
+
+	int stdDelete(int stdNo) throws Exception;
+
+	int stdAdd(String stdName, int stdAge, String stdGen, String stdScore) throws Exception;
+
+
+
+
 
 }

@@ -23,5 +23,24 @@
 		FROM TB_STUDENT
 		WHERE STD_NO = ?
 	</entry>
+	
+	<entry key="stdUpdate">
+		UPDATE TB_STUDENT SET
+		STD_NAME = ?,
+		STD_AGE = ?,
+		STD_GENDER = ?,
+		STD_SCORE = ?
+		WHERE STD_NO = ?
+	</entry>
+	
+	<entry key="stdDelete">
+		DELETE FROM TB_STUDENT
+		WHERE STD_NO = ?
+	</entry>
 
+
+	<entry key="stdAdd">
+		INSERT INTO TB_STUDENT
+		VALUES(SEQ_STD_NO.NEXTVAL, ?, ? , ?, ?)
+	</entry>
 </properties>
